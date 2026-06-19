@@ -1,0 +1,45 @@
+{
+  "sectionLabel": "06. Skills & Tools",
+  "headline": "The skills and tools I use to bring ideas to life.",
+  "headlineHighlight": "bring ideas to life.",
+  "description": "A combination of design expertise, technical collaboration, and modern tools to deliver high-quality digital products.",
+  "coreSkills": [
+    { "name": "Product Design", "icon": "Package" },
+    { "name": "UI Design", "icon": "PenTool" },
+    { "name": "UX Design", "icon": "User" },
+    { "name": "Design Systems", "icon": "LayoutGrid" },
+    { "name": "User Research", "icon": "Search" },
+    { "name": "Wireframing", "icon": "LayoutTemplate" },
+    { "name": "Prototyping", "icon": "Smartphone" },
+    { "name": "Interaction Design", "icon": "MousePointer2" },
+    { "name": "Information Architecture", "icon": "Share2" },
+    { "name": "Usability Testing", "icon": "CheckCircle2" },
+    { "name": "Problem Solving", "icon": "Lightbulb" },
+    { "name": "Frontend Collaboration", "icon": "Code" }
+  ],
+  "designTools": [
+    { "name": "Figma", "iconType": "svg-figma" },
+    { "name": "FigJam", "iconType": "svg-figjam" },
+    { "name": "Adobe Illustrator", "iconType": "adobe-ai" },
+    { "name": "Adobe Photoshop", "iconType": "adobe-ps" },
+    { "name": "Jira", "iconType": "text-jira" },
+    { "name": "Notion", "iconType": "text-notion" },
+    { "name": "Google Workspace", "iconType": "text-google" }
+  ],
+  "aiToolkit": [
+    { "name": "AI Research", "icon": "Search" },
+    { "name": "Prompt Engineering", "icon": "Terminal" },
+    { "name": "AI Ideation", "icon": "Lightbulb" },
+    { "name": "UX Research Acceleration", "icon": "Users" },
+    { "name": "Content Generation", "icon": "FileText" },
+    { "name": "Workflow Automation", "icon": "Zap" }
+  ],
+  "collaboration": [
+    { "name": "Product Teams", "icon": "Package" },
+    { "name": "Developers", "icon": "Code" },
+    { "name": "QA Teams", "icon": "CheckCircle2" },
+    { "name": "Stakeholders", "icon": "User" },
+    { "name": "Business Teams", "icon": "BarChart" },
+    { "name": "Agile Workflow", "icon": "RefreshCw" }
+  ]
+}

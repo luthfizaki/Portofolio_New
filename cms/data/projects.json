@@ -1,0 +1,256 @@
+{
+  "sectionLabel": "03. Featured Projects",
+  "headline": "Selected products I've helped design and ship.",
+  "headlineHighlight": "design and ship.",
+  "description": "A curated collection of projects across health-tech, insurance, education, HR, and productivity — each focused on solving real user problems.",
+  "projectBadge": "7+ Projects Completed",
+  "projects": [
+    {
+      "id": "mymedix",
+      "title": "MyMedix SuperApp",
+      "category": "HealthTech",
+      "fullCategory": "HealthTech • Mobile Application",
+      "iconName": "HeartPulse",
+      "overview": "Designed a healthcare and wellness super application that combines health assessment, monitoring, and digital health services into a unified mobile experience.",
+      "contributions": [
+        "End-to-end user journey design",
+        "Health scanning experience",
+        "Dashboard systems",
+        "Design system development"
+      ],
+      "impact": "Simplified healthcare interactions and improved operational workflows.",
+      "tools": [
+        "Figma",
+        "Design System"
+      ],
+      "hex": "#2B7FFF",
+      "mockupType": "mobile-double",
+      "featured": true,
+      "order": 0,
+      "status": "published",
+      "caseStudy": {
+        "problem": "",
+        "solution": "",
+        "myRole": "Lead UI/UX Designer",
+        "teamSize": 5,
+        "timeline": "",
+        "platforms": [
+          "iOS",
+          "Android"
+        ],
+        "processSteps": []
+      }
+    },
+    {
+      "id": "e-hd",
+      "title": "e-HD Health Insurance Platform",
+      "category": "HealthTech",
+      "fullCategory": "HealthTech • Insurance",
+      "iconName": "ShieldCheck",
+      "overview": "Designed a digital health insurance ecosystem that streamlines claim processes and operational workflows for insurance providers and healthcare services.",
+      "contributions": [
+        "Insurance claim workflows",
+        "Enterprise dashboards",
+        "Healthcare provider interfaces",
+        "High-fidelity UI concepts"
+      ],
+      "impact": "Improved operational visibility and workflow efficiency.",
+      "tools": [
+        "Figma",
+        "FigJam"
+      ],
+      "hex": "#10B981",
+      "mockupType": "desktop-mobile",
+      "featured": true,
+      "order": 1,
+      "status": "published",
+      "caseStudy": {
+        "problem": "",
+        "solution": "",
+        "myRole": "UI/UX Designer",
+        "teamSize": 4,
+        "timeline": "",
+        "platforms": [
+          "Web",
+          "Mobile"
+        ],
+        "processSteps": []
+      }
+    },
+    {
+      "id": "flexa",
+      "title": "FLEXA Insurance Platform",
+      "category": "Insurance",
+      "fullCategory": "Insurance • Gamification",
+      "iconName": "Sparkles",
+      "overview": "Designed a Gen Z-focused insurance purchasing experience with customizable coverage, rewards, missions, and affiliate systems.",
+      "contributions": [
+        "Mobile-first experience",
+        "Gamification design",
+        "Insurance customization workflows",
+        "Affiliate experience"
+      ],
+      "impact": "Increased user engagement and product accessibility.",
+      "tools": [
+        "Figma",
+        "Design System"
+      ],
+      "hex": "#8B5CF6",
+      "mockupType": "mobile-double-purple",
+      "featured": true,
+      "order": 2,
+      "status": "published",
+      "caseStudy": {
+        "problem": "",
+        "solution": "",
+        "myRole": "UI/UX Designer",
+        "teamSize": 6,
+        "timeline": "",
+        "platforms": [
+          "iOS",
+          "Android"
+        ],
+        "processSteps": []
+      }
+    },
+    {
+      "id": "sentris",
+      "title": "Sentris Attendance",
+      "category": "HR Technology",
+      "fullCategory": "HR Technology",
+      "iconName": "Briefcase",
+      "overview": "Designed an employee attendance platform focused on efficiency and operational usability.",
+      "contributions": [
+        "Attendance workflows",
+        "Leave management",
+        "Mobile-first experience",
+        "WFH request system"
+      ],
+      "impact": "Improved employee operational efficiency.",
+      "tools": [
+        "Figma"
+      ],
+      "hex": "#059669",
+      "mockupType": "mobile-cards",
+      "featured": true,
+      "order": 3,
+      "status": "published",
+      "caseStudy": {
+        "problem": "",
+        "solution": "",
+        "myRole": "UI/UX Designer",
+        "teamSize": 3,
+        "timeline": "",
+        "platforms": [
+          "Web",
+          "Mobile"
+        ],
+        "processSteps": []
+      }
+    },
+    {
+      "id": "lms",
+      "title": "LMS Improvement",
+      "category": "Education Tech",
+      "fullCategory": "Education Technology",
+      "iconName": "BookOpen",
+      "overview": "Conducted UX research and redesigned critical user journeys to improve learning experiences.",
+      "contributions": [
+        "UX Research",
+        "Information Architecture",
+        "Navigation Redesign",
+        "Usability Improvements"
+      ],
+      "impact": "Enhanced learning accessibility and usability.",
+      "tools": [
+        "Figma",
+        "UX Research"
+      ],
+      "hex": "#D97706",
+      "mockupType": "desktop-half",
+      "featured": true,
+      "order": 4,
+      "status": "published",
+      "caseStudy": {
+        "problem": "",
+        "solution": "",
+        "myRole": "UX Designer & Researcher",
+        "teamSize": 4,
+        "timeline": "",
+        "platforms": [
+          "Web"
+        ],
+        "processSteps": []
+      }
+    },
+    {
+      "id": "student-complaint",
+      "title": "Student Complaint Service Platform",
+      "category": "Education",
+      "fullCategory": "Education Platform",
+      "iconName": "MessageSquare",
+      "overview": "Designed a digital complaint service platform for university students.",
+      "contributions": [
+        "Complaint Submission Workflow",
+        "UI Redesign",
+        "Responsive Design",
+        "User Experience Optimization"
+      ],
+      "impact": "Improved transparency and student satisfaction.",
+      "tools": [
+        "Figma"
+      ],
+      "hex": "#7C3AED",
+      "mockupType": "desktop-slant",
+      "featured": true,
+      "order": 5,
+      "status": "published",
+      "caseStudy": {
+        "problem": "",
+        "solution": "",
+        "myRole": "UI/UX Designer",
+        "teamSize": 2,
+        "timeline": "",
+        "platforms": [
+          "Web"
+        ],
+        "processSteps": []
+      }
+    },
+    {
+      "id": "notelt",
+      "title": "Notelt Mobile App",
+      "category": "Productivity",
+      "fullCategory": "Productivity Application",
+      "iconName": "PenTool",
+      "overview": "Designed a mobile note-taking application focused on usability and information management.",
+      "contributions": [
+        "Note Management Workflow",
+        "Mobile-first Design",
+        "Digital Payment Integration",
+        "Accessibility Improvements"
+      ],
+      "impact": "Created a more intuitive productivity experience.",
+      "tools": [
+        "Figma"
+      ],
+      "hex": "#2563EB",
+      "mockupType": "mobile-half",
+      "featured": true,
+      "order": 6,
+      "status": "published",
+      "caseStudy": {
+        "problem": "",
+        "solution": "",
+        "myRole": "UI/UX Designer",
+        "teamSize": 2,
+        "timeline": "",
+        "platforms": [
+          "iOS",
+          "Android"
+        ],
+        "processSteps": []
+      }
+    }
+  ]
+}

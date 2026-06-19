@@ -6,10 +6,13 @@ import {
   ArrowRight, ArrowUpRight, Phone, MessageSquare, Lock, Sparkles,
   Calendar
 } from "lucide-react";
+import { MobileAmbientBackground } from "./MobileAmbientBackground";
+import { useContent } from "../context/ContentContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const ContactSection = () => {
+  const { settings } = useContent();
   const sectionRef = useRef<HTMLDivElement>(null);
   const leftSideRef = useRef<HTMLDivElement>(null);
   const rightSideRef = useRef<HTMLDivElement>(null);
@@ -133,20 +136,23 @@ export const ContactSection = () => {
   return (
     <section ref={sectionRef} className="relative w-full bg-[#020617] text-white py-24 lg:py-32 z-20 overflow-hidden" id="contact">
       
+      {/* Mobile-only ambient parallax field — adds depth + scroll motion on
+          phones; renders nothing on desktop. */}
+      <MobileAmbientBackground tint="blue" />
+
       {/* Immersive Atmospheric background */}
-      {/* Large Cinematic Gradient Orbs with beautiful extra-soft blur that blends perfectly */}
-      <div 
-        className="ambient-orb-1 absolute top-[10%] left-[5%] w-[800px] h-[800px] rounded-full pointer-events-none mix-blend-screen" 
-        style={{ 
+      {/* Large Cinematic Gradient Orbs — blur radius scaled down on mobile GPUs;
+          desktop keeps the original 220/240px via the md: variants. */}
+      <div
+        className="ambient-orb-1 absolute top-[10%] left-[5%] w-[800px] h-[800px] rounded-full pointer-events-none mix-blend-screen blur-[80px] md:blur-[220px]"
+        style={{
           backgroundImage: "radial-gradient(circle, rgba(43, 127, 255, 0.1) 0%, rgba(43, 127, 255, 0) 75%)",
-          filter: "blur(220px)" 
         }}
       />
-      <div 
-        className="ambient-orb-2 absolute bottom-[5%] right-[5%] w-[900px] h-[900px] rounded-full pointer-events-none mix-blend-screen" 
-        style={{ 
+      <div
+        className="ambient-orb-2 absolute bottom-[5%] right-[5%] w-[900px] h-[900px] rounded-full pointer-events-none mix-blend-screen blur-[90px] md:blur-[240px]"
+        style={{
           backgroundImage: "radial-gradient(circle, rgba(92, 50, 255, 0.08) 0%, rgba(92, 50, 255, 0) 75%)",
-          filter: "blur(240px)" 
         }}
       />
       
@@ -154,8 +160,7 @@ export const ContactSection = () => {
       <div className="spectacular-planet-left absolute left-[-160px] top-[32%] md:top-[38%] w-[360px] h-[360px] lg:w-[440px] lg:h-[440px] pointer-events-none select-none z-0">
         {/* Soft atmospheric halo blue glow */}
         <div 
-          className="absolute inset-[-50px] bg-[#2B7FFF]/12 rounded-full pointer-events-none" 
-          style={{ filter: "blur(140px)" }}
+          className="absolute inset-[-50px] bg-[#2B7FFF]/12 rounded-full pointer-events-none blur-[80px] md:blur-[140px]"
         />
         {/* Planet body with dark back and glowing left crescent outline */}
         <div className="absolute inset-0 bg-gradient-to-tr from-[#2B7FFF]/25 via-[#0A1833] to-[#020617] rounded-full border border-white/5 shadow-[inset_-30px_30px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(43,127,255,0.25)] overflow-hidden">
@@ -170,8 +175,7 @@ export const ContactSection = () => {
       <div className="spectacular-planet absolute right-[-125px] lg:right-[-65px] top-[5%] md:top-[12%] w-[380px] h-[380px] lg:w-[460px] lg:h-[460px] pointer-events-none select-none z-0">
         {/* Soft atmospheric halo glow */}
         <div 
-          className="absolute inset-[-60px] bg-[#2B7FFF]/15 rounded-full pointer-events-none" 
-          style={{ filter: "blur(160px)" }}
+          className="absolute inset-[-60px] bg-[#2B7FFF]/15 rounded-full pointer-events-none blur-[90px] md:blur-[160px]"
         />
         {/* Planet body with dark side shadow & bright crescent side glow */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#020617] via-[#0D1D3D] to-[#2B7FFF]/70 rounded-full border border-white/5 shadow-[inset_-30px_-30px_70px_rgba(0,0,0,0.95),0_0_50px_rgba(43,127,255,0.35)] overflow-hidden">
@@ -262,9 +266,11 @@ export const ContactSection = () => {
              </a>
 
              {/* Download CV Card */}
-             <a 
-               href="#"
-               onClick={(e) => { e.preventDefault(); alert("CV Download Triggered!"); }}
+             <a
+               href={settings?.resumeUrl || "#"}
+               target={settings?.resumeUrl ? "_blank" : undefined}
+               rel="noreferrer"
+               onClick={(e) => { if (!settings?.resumeUrl) { e.preventDefault(); alert("Resume belum di-upload. Tambahkan di CMS → Settings → Resume / CV."); } }}
                className="contact-card-anim group relative overflow-hidden flex items-center justify-between p-4 px-5 rounded-2xl bg-[#060A14]/70 border border-white/5 backdrop-blur-xl transition-all duration-300 hover:border-[#5C32FF]/30 hover:-translate-y-0.5 hover:shadow-[0_15px_30px_rgba(92,50,255,0.08)]"
              >
                 <div className="absolute inset-0 bg-gradient-to-r from-[#5C32FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

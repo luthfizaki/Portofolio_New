@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,12 +15,20 @@ import {
   Sparkles,
   ArrowRight,
   X,
-  Star
+  Star,
+  FolderOpen,
+  type LucideIcon
 } from "lucide-react";
+import { useContent } from "../context/ContentContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const projects = [
+// Icon mapping from string names to Lucide components
+const iconMap: Record<string, LucideIcon> = {
+  HeartPulse, ShieldCheck, Sparkles, Briefcase, BookOpen, MessageSquare, PenTool, Search, FolderOpen, Star,
+};
+
+const defaultProjects = [
   {
     id: "mymedix",
     title: "MyMedix SuperApp",
@@ -213,7 +222,16 @@ const Mockup = ({ type }: { type: string }) => {
 };
 
 export const ProjectsSection = () => {
-  const [activeProject, setActiveProject] = useState<typeof projects[0] | null>(() => {
+  const navigate = useNavigate();
+  const { projects: dynamicProjects } = useContent();
+  
+  // Merge dynamic data with default projects (icon mapping from iconName)
+  const projects = (dynamicProjects?.projects || defaultProjects).map((p: any) => ({
+    ...p,
+    icon: iconMap[p.iconName] || p.icon || FolderOpen,
+  }));
+
+  const [activeProject, setActiveProject] = useState<any>(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       return null;
     }
@@ -223,7 +241,7 @@ export const ProjectsSection = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  const handleProjectClick = (project: typeof projects[0]) => {
+  const handleProjectClick = (project: any) => {
     setActiveProject(project);
     setHasInteracted(true);
   };
@@ -552,9 +570,18 @@ export const ProjectsSection = () => {
                     {activeProject.title}
                   </h3>
                   
-                  <p className="text-[#8B9DBB] leading-[1.6] text-sm mb-8 max-w-lg">
+                  <p className="text-[#8B9DBB] leading-[1.6] text-sm mb-6 max-w-lg">
                     {activeProject.overview}
                   </p>
+
+                  <button
+                    onClick={() => navigate(`/project/${activeProject.id}`)}
+                    className="group/cta self-start flex items-center gap-2 mb-8 pl-5 pr-4 py-2.5 rounded-full text-sm font-medium text-white transition-all hover:shadow-lg active:scale-[0.97]"
+                    style={{ backgroundColor: activeProject.hex, boxShadow: `0 8px 24px ${activeProject.hex}33` }}
+                  >
+                    View Full Case Study
+                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5" />
+                  </button>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
                     {/* Key Contributions */}
@@ -789,6 +816,15 @@ export const ProjectsSection = () => {
                         ))}
                       </div>
                     </div>
+
+                    {/* View Full Case Study CTA */}
+                    <button
+                      onClick={() => navigate(`/project/${activeProject.id}`)}
+                      className="w-full flex items-center justify-center gap-2 h-12 rounded-2xl text-white font-semibold text-sm active:scale-[0.98] transition-transform"
+                      style={{ backgroundColor: activeProject.hex, boxShadow: `0 8px 24px ${activeProject.hex}40` }}
+                    >
+                      View Full Case Study <ArrowUpRight className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               </motion.div>

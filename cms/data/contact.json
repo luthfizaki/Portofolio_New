@@ -1,0 +1,47 @@
+{
+  "sectionLabel": "07. Contact",
+  "headline": "Let's build meaningful digital experiences together.",
+  "headlineHighlight": "meaningful digital",
+  "description": "I'm open to new opportunities, collaborations, and interesting projects. Let's create something great together!",
+  "contactCards": [
+    {
+      "id": "email",
+      "type": "email",
+      "label": "Email",
+      "value": "hi@luthfiarzaki.com",
+      "href": "mailto:hi@luthfiarzaki.com",
+      "icon": "Mail"
+    },
+    {
+      "id": "linkedin",
+      "type": "linkedin",
+      "label": "LinkedIn",
+      "value": "linkedin.com/in/luthfiarzaki",
+      "href": "https://linkedin.com/in/luthfiarzaki",
+      "icon": "Linkedin",
+      "external": true
+    },
+    {
+      "id": "cv",
+      "type": "cv",
+      "label": "Download CV",
+      "value": "View my resume",
+      "href": "#",
+      "icon": "FileText"
+    }
+  ],
+  "formLabels": {
+    "name": "Your Name",
+    "email": "Email Address",
+    "subject": "Subject",
+    "message": "Your Message"
+  },
+  "formPlaceholders": {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "subject": "Project Inquiry",
+    "message": "Tell me about your project..."
+  },
+  "submitButtonText": "Send Message",
+  "privacyNotice": "Your information is safe. I'll never share your details."
+}

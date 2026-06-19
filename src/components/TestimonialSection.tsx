@@ -3,10 +3,12 @@ import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Quote } from "lucide-react";
+import { useContent } from "../context/ContentContext";
+import { MobileAmbientBackground } from "./MobileAmbientBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const testimonials = [
+const defaultTestimonials = [
   {
     id: 1,
     content: "I had the opportunity to work with Luthfi, a talented UI/UX designer who is also part of the RnD team. He has strong analytical thinking and the ability to create designs that perfectly align with client needs.",
@@ -34,6 +36,8 @@ const testimonials = [
 ];
 
 export const TestimonialSection = () => {
+  const { testimonials: dynamicTestimonials } = useContent();
+  const testimonials = dynamicTestimonials?.testimonials || defaultTestimonials;
   const sectionRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -74,7 +78,10 @@ export const TestimonialSection = () => {
 
   return (
     <section ref={sectionRef} className="relative w-full bg-[#020617] text-white py-32 z-20 overflow-hidden" id="testimonials">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#2B7FFF]/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#2B7FFF]/5 blur-[80px] md:blur-[150px] rounded-full pointer-events-none" />
+
+      {/* Mobile-only ambient parallax field (desktop unaffected). */}
+      <MobileAmbientBackground tint="blue" />
       
       <div className="max-w-[1200px] mx-auto px-6 lg:px-12 relative z-10 flex flex-col items-start w-full">
         

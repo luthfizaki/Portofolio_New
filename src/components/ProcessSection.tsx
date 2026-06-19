@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Search, PenTool, ClipboardCheck, Rocket, Sparkles, Target, Zap, Lightbulb, FileText, TrendingUp, MessageSquare, ArrowRight } from "lucide-react";
+import { MobileAmbientBackground } from "./MobileAmbientBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -148,9 +149,12 @@ export const ProcessSection = () => {
   return (
     <section ref={sectionRef} className="relative w-full bg-[#020617] text-white py-24 z-20 overflow-hidden" id="process">
       
-      {/* Ambient Blur Orbs */}
-      <div className="parallax-bg absolute top-0 left-[-10%] w-[40vw] h-[40vw] bg-[#2B7FFF]/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen" data-speed="1.2" />
-      <div className="parallax-bg absolute bottom-[10%] right-[-10%] w-[50vw] h-[50vw] bg-[#5C32FF]/10 blur-[150px] rounded-full pointer-events-none mix-blend-screen" data-speed="0.8" />
+      {/* Ambient Blur Orbs — blur scaled down on mobile, full 150px on desktop */}
+      <div className="parallax-bg absolute top-0 left-[-10%] w-[40vw] h-[40vw] bg-[#2B7FFF]/10 blur-[80px] md:blur-[150px] rounded-full pointer-events-none mix-blend-screen" data-speed="1.2" />
+      <div className="parallax-bg absolute bottom-[10%] right-[-10%] w-[50vw] h-[50vw] bg-[#5C32FF]/10 blur-[80px] md:blur-[150px] rounded-full pointer-events-none mix-blend-screen" data-speed="0.8" />
+
+      {/* Mobile-only ambient parallax field (desktop unaffected). */}
+      <MobileAmbientBackground tint="purple" />
       <div className="parallax-bg absolute top-[40%] left-[20%] w-[30vw] h-[30vw] bg-white/[0.02] blur-[100px] rounded-full pointer-events-none mix-blend-screen" data-speed="1.5" />
 
       {/* Floating Particles */}

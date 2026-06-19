@@ -1,0 +1,70 @@
+{
+  "colors": {
+    "primary": "#2B7FFF",
+    "accent": "#5C32FF",
+    "background": "#060A14",
+    "text": "#E0E7F1",
+    "textMuted": "#8B9DBB",
+    "surface": "#020617"
+  },
+  "personalInfo": {
+    "name": "Luthfi Arzaki",
+    "email": "hi@luthfiarzaki.com",
+    "linkedin": "linkedin.com/in/luthfiarzaki",
+    "location": "Jakarta, Indonesia",
+    "title": "UI/UX Designer"
+  },
+  "navLinks": [
+    {
+      "label": "Home",
+      "id": "home"
+    },
+    {
+      "label": "About",
+      "id": "about"
+    },
+    {
+      "label": "Project",
+      "id": "projects"
+    },
+    {
+      "label": "Experience",
+      "id": "experience"
+    },
+    {
+      "label": "Skill",
+      "id": "skills"
+    },
+    {
+      "label": "Contact",
+      "id": "contact"
+    }
+  ],
+  "sectionOrder": [
+    "hero",
+    "about",
+    "experience",
+    "projects",
+    "process",
+    "testimonials",
+    "skills",
+    "contact"
+  ],
+  "sectionVisibility": {
+    "hero": true,
+    "about": true,
+    "experience": true,
+    "projects": true,
+    "process": true,
+    "testimonials": true,
+    "skills": true,
+    "contact": true
+  },
+  "footer": {
+    "tagline": "Designing impactful digital experiences through user-centered thinking.",
+    "copyright": "© 2025 Luthfi Arzaki. All rights reserved.",
+    "availability": "Full-time, Freelance, and Contract Projects"
+  },
+  "resumeUrl": "/uploads/mqk79p2klz7ra.pdf",
+  "resumeName": "LuthfiArzaki_ProductDesigner_CV.pdf"
+}

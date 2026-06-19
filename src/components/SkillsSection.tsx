@@ -6,12 +6,20 @@ import {
   Sparkles, Package, PenTool, User, LayoutGrid, Search, 
   LayoutTemplate, Smartphone, MousePointer2, Share2, 
   CheckCircle2, Lightbulb, Code, Briefcase, Terminal, 
-  Users, FileText, Zap, BarChart, RefreshCw, ChevronDown, ChevronUp
+  Users, FileText, Zap, BarChart, RefreshCw, ChevronDown, ChevronUp,
+  type LucideIcon
 } from "lucide-react";
+import { useContent } from "../context/ContentContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const coreSkills = [
+// Icon mapping
+const skillIconMap: Record<string, LucideIcon> = {
+  Package, PenTool, User, LayoutGrid, Search, LayoutTemplate, Smartphone,
+  MousePointer2, Share2, CheckCircle2, Lightbulb, Code, Terminal, Users, FileText, Zap, BarChart, RefreshCw, Briefcase,
+};
+
+const defaultCoreSkills = [
   { name: "Product Design", icon: Package },
   { name: "UI Design", icon: PenTool },
   { name: "UX Design", icon: User },
@@ -57,7 +65,7 @@ const designTools = [
   }
 ];
 
-const aiToolkit = [
+const aiToolkitDefault = [
   { name: "AI Research", icon: Search },
   { name: "Prompt Engineering", icon: Terminal },
   { name: "AI Ideation", icon: Lightbulb },
@@ -66,7 +74,7 @@ const aiToolkit = [
   { name: "Workflow Automation", icon: Zap }
 ];
 
-const collaboration = [
+const collaborationDefault = [
   { name: "Product Teams", icon: Package },
   { name: "Developers", icon: Code },
   { name: "QA Teams", icon: CheckCircle2 },
@@ -119,6 +127,22 @@ const MobileAccordionItem = ({
 }
 
 export const SkillsSection = () => {
+  const { skills: dynamicSkills } = useContent();
+
+  // Merge dynamic data with defaults, mapping iconName to Lucide components
+  const coreSkills = (dynamicSkills?.coreSkills || defaultCoreSkills).map((s: any) => ({
+    ...s,
+    icon: skillIconMap[s.icon] || s.icon || Package,
+  }));
+  const aiToolkit = (dynamicSkills?.aiToolkit || aiToolkitDefault).map((s: any) => ({
+    ...s,
+    icon: skillIconMap[s.icon] || s.icon || Search,
+  }));
+  const collaboration = (dynamicSkills?.collaboration || collaborationDefault).map((s: any) => ({
+    ...s,
+    icon: skillIconMap[s.icon] || s.icon || Package,
+  }));
+
   const sectionRef = useRef<HTMLDivElement>(null);
   const [openSection, setOpenSection] = useState<string>("core");
   

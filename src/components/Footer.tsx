@@ -1,12 +1,16 @@
 import React from "react";
 import { Linkedin, Mail, MapPin, Globe, Sparkles, Heart } from "lucide-react";
+import { MobileAmbientBackground } from "./MobileAmbientBackground";
 
 export const Footer = () => {
   return (
     <footer className="w-full bg-[#020617] text-[#8B9DBB] pb-12 pt-8 relative z-20 overflow-hidden">
       
       {/* Tiny soft highlight under the footer */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] h-[200px] bg-[#2B7FFF]/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] h-[200px] bg-[#2B7FFF]/5 blur-[60px] md:blur-[100px] rounded-full pointer-events-none" />
+
+      {/* Mobile-only ambient parallax field (desktop unaffected). */}
+      <MobileAmbientBackground tint="blue" density="low" showGrid={false} />
 
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
         
@@ -16,7 +20,7 @@ export const Footer = () => {
           {/* Inner content container to mask the spinning border */}
           <div className="relative w-full rounded-[11px] bg-[#040c1e]/95 backdrop-blur-3xl px-6 py-6 sm:px-8 sm:py-5 lg:px-12 lg:py-6 overflow-hidden z-10">
             
-            <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#2B7FFF]/5 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-[#2B7FFF]/5 blur-[70px] md:blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
 
             {/* Main columns grid */}

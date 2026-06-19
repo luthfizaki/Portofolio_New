@@ -1,0 +1,34 @@
+{
+  "sectionLabel": "01. About Me",
+  "headline": {
+    "before": "Where ",
+    "animatedWords": ["strategy", "usability", "design"],
+    "after": " come together"
+  },
+  "bio": "I create user-centered digital products that balance usability, scalability, and business impact through strategic thinking, research, and intuitive design solutions.",
+  "location": "Indonesia",
+  "availability": "Freelance",
+  "infoCards": [
+    {
+      "id": "design-focus",
+      "icon": "PenTool",
+      "title": "Design Focus",
+      "description": "End-to-end product design, bridging aesthetics with scalable design systems.",
+      "hoverColor": "blue"
+    },
+    {
+      "id": "domain-experience",
+      "icon": "LayoutDashboard",
+      "title": "Domain Experience",
+      "description": "HealthTech, Flexible Insurance platforms, Dashboards, and AI Systems.",
+      "hoverColor": "purple"
+    },
+    {
+      "id": "approach",
+      "icon": "Zap",
+      "title": "Approach",
+      "description": "User-centered, data-driven, prioritizing functional clarity without sacrificing aesthetics.",
+      "hoverColor": "emerald"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "sectionLabel": "04. Design Process",
+  "headline": "How I approach product design from research to delivery.",
+  "headlineHighlight": "research to delivery.",
+  "description": "A structured yet flexible process that ensures every product is grounded in user needs and business goals.",
+  "stages": [
+    {
+      "id": "stage-1",
+      "number": "01",
+      "title": "Research",
+      "description": "Understanding users, business goals, and product challenges through stakeholder discussions, competitor analysis, and AI-assisted research.",
+      "iconName": "Search",
+      "order": 0
+    },
+    {
+      "id": "stage-2",
+      "number": "02",
+      "title": "Define",
+      "description": "Translating insights into clear problem statements, user flows, and product requirements.",
+      "iconName": "Target",
+      "order": 1
+    },
+    {
+      "id": "stage-3",
+      "number": "03",
+      "title": "Design",
+      "description": "Creating wireframes, design systems, prototypes, and scalable interfaces focused on usability and consistency.",
+      "iconName": "PenTool",
+      "order": 2
+    },
+    {
+      "id": "stage-4",
+      "number": "04",
+      "title": "Validate",
+      "description": "Testing concepts, gathering feedback, and refining experiences through iterative improvements.",
+      "iconName": "ClipboardCheck",
+      "order": 3
+    },
+    {
+      "id": "stage-5",
+      "number": "05",
+      "title": "Deliver",
+      "description": "Collaborating with developers and stakeholders to ensure seamless implementation and product quality.",
+      "iconName": "Rocket",
+      "order": 4
+    }
+  ],
+  "aiWorkflow": {
+    "title": "AI-Assisted Workflow",
+    "description": "Leveraging AI tools to accelerate research, ideation, and content generation while maintaining human-centered quality.",
+    "categories": [
+      {
+        "title": "Research & Insights",
+        "items": ["Market Trend Analysis", "Competitor Benchmarking", "User Persona Generation"]
+      },
+      {
+        "title": "Ideation",
+        "items": ["Concept Brainstorming", "Feature Prioritization", "Solution Mapping"]
+      },
+      {
+        "title": "Content Generation",
+        "items": ["UX Writing", "Microcopy", "Documentation"]
+      }
+    ]
+  }
+}

@@ -1,11 +1,19 @@
-@import "tailwindcss";
+/* Font import MUST come before the Tailwind import: Tailwind v4 inlines its
+ * `@import "tailwindcss"` into thousands of rules, and the CSS spec requires all
+ * @import statements to precede any rules. Ordering it first silences the
+ * "[vite:css][postcss] @import must precede all other statements" warning. */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Mr+Dafoe&display=swap');
+@import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Oswald", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-signature: "Mr Dafoe", cursive;
+
+  /* Animation utilities referenced by components (esp. the mobile Hero view) */
+  --animate-spin-slow: spin-slow 8s linear infinite;
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 body {
@@ -13,6 +21,12 @@ body {
   color: #FFFFFF;
   margin: 0;
   overflow-x: hidden;
+  /* Crisper touch interactions on mobile */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .glass-texture {
@@ -91,4 +105,38 @@ body {
   );
   animation: border-spin 14s linear infinite;
   z-index: 0;
+}
+
+/* Keyframes backing the --animate-* theme tokens above */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+ * Accessibility + performance: honour the OS "reduce motion" setting.
+ * Neutralizes CSS animations/transitions globally; JS-driven (framer-motion)
+ * infinite loops are additionally gated per-component via usePrefersReducedMotion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

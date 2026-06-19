@@ -1,0 +1,58 @@
+{
+  "sectionLabel": "02. Experience",
+  "headline": "My professional journey shaped by curiosity and impact.",
+  "headlineHighlight": "curiosity and impact.",
+  "description": "A timeline of experiences across product design, enterprise systems, health-tech, insurance, and digital innovation.",
+  "experiences": [
+    {
+      "id": "exp-1",
+      "year": "2018",
+      "company": "PT. AZIMUTH SOLUTION",
+      "role": "Front-End Developer",
+      "date": "Jan 2018 \u2013 Mar 2018",
+      "location": "Jakarta, Indonesia",
+      "description": "Developed responsive web interfaces and collaborated on digital product implementation using modern frontend technologies.",
+      "icon": "Code"
+    },
+    {
+      "id": "exp-2",
+      "year": "2021",
+      "company": "Freelance",
+      "role": "UI/UX Designer",
+      "date": "Jan 2021 \u2013 Present",
+      "location": "Remote",
+      "description": "Collaborating with startups and businesses to create user-centered digital products, dashboards, and mobile applications across various industries.",
+      "icon": "User"
+    },
+    {
+      "id": "exp-3",
+      "year": "2022",
+      "company": "PT. TRI NINDYA UTAMA",
+      "role": "UI Designer",
+      "date": "Mar 2022 \u2013 Aug 2022",
+      "location": "Jakarta, Indonesia",
+      "description": "Designed enterprise dashboard systems and digital interfaces with a focus on clarity, information hierarchy, and usability.",
+      "icon": "PenTool"
+    },
+    {
+      "id": "exp-4",
+      "year": "2022",
+      "company": "PT. TRI NINDYA UTAMA",
+      "role": "Quality Assurance Intern",
+      "date": "Mar 2022 \u2013 Aug 2022",
+      "location": "Jakarta, Indonesia",
+      "description": "Supported product quality through testing, usability validation, and User Acceptance Testing processes.",
+      "icon": "Shield"
+    },
+    {
+      "id": "exp-5",
+      "year": "2023",
+      "company": "PT. SELERIS MEDITEKNO INTERNASIONAL",
+      "role": "UI/UX Designer",
+      "date": "Nov 2023 \u2013 Present",
+      "location": "Jakarta, Indonesia",
+      "description": "Designing AI-powered health-tech and insurance platforms focused on usability, workflow efficiency, and scalable enterprise experiences.",
+      "icon": "Activity"
+    }
+  ]
+}
