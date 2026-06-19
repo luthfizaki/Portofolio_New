@@ -1,15 +1,20 @@
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { Upload, FileText, Loader2 } from "lucide-react";
 import { EditorShell, Card, FormField, Input, SaveButton } from "./EditorUI";
 import { getContent, updateContent, uploadFile } from "./api";
+import { useUnsavedGuard } from "./useUnsavedGuard";
 
 export function SettingsEditor() {
   const [data, setData] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [uploadingResume, setUploadingResume] = useState(false);
+  const savedSnapshot = useRef<string>("");
 
-  useEffect(() => { getContent("settings").then(setData).catch(console.error); }, []);
+  useEffect(() => { getContent("settings").then((d) => { setData(d); savedSnapshot.current = JSON.stringify(d); }).catch(console.error); }, []);
+
+  const dirty = !!data && JSON.stringify(data) !== savedSnapshot.current;
+  useUnsavedGuard(dirty);
 
   const handleResumeUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -29,9 +34,17 @@ export function SettingsEditor() {
 
   const handleSave = async () => {
     setSaving(true);
-    await updateContent("settings", data);
-    setSaving(false); setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    try {
+      await updateContent("settings", data);
+      savedSnapshot.current = JSON.stringify(data);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to save settings. Please try again.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const toggleSection = (key: string) => {
@@ -117,7 +130,10 @@ export function SettingsEditor() {
         </div>
       </Card>
 
-      <div className="flex justify-end"><SaveButton onClick={handleSave} saving={saving} saved={saved} /></div>
+      <div className="flex justify-end items-center gap-3">
+        {dirty && !saved && <span className="text-[#8B9DBB]/60 text-xs">Unsaved changes</span>}
+        <SaveButton onClick={handleSave} saving={saving} saved={saved} />
+      </div>
     </EditorShell>
   );
 }

@@ -1,9 +1,10 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import multer from "multer";
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, renameSync, unlinkSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -11,7 +12,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_DIR = path.join(__dirname, "data");
 const UPLOADS_DIR = path.join(__dirname, "..", "public", "uploads");
-const JWT_SECRET = "portfolio-cms-secret-key-change-in-production";
+// Prefer an env-provided secret; the literal fallback keeps local dev working.
+const JWT_SECRET = process.env.JWT_SECRET || "portfolio-cms-secret-key-change-in-production";
 
 // Ensure directories exist
 if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
@@ -31,11 +33,27 @@ function readJSON(filename: string) {
 
 function writeJSON(filename: string, data: any) {
   const filePath = path.join(DATA_DIR, filename);
-  writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+  const tmpPath = `${filePath}.tmp`;
+  // Write to a temp file then atomically rename so a crash mid-write can't
+  // leave a half-written / corrupted JSON file behind.
+  writeFileSync(tmpPath, JSON.stringify(data, null, 2), "utf-8");
+  renameSync(tmpPath, filePath);
 }
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+// Remove an uploaded file referenced by its public URL ("/uploads/xyz.ext").
+// Guards against path traversal — only ever deletes inside UPLOADS_DIR.
+function deleteUploadByUrl(url?: string) {
+  if (!url || typeof url !== "string" || !url.startsWith("/uploads/")) return;
+  const filePath = path.join(UPLOADS_DIR, path.basename(url));
+  try {
+    if (filePath.startsWith(UPLOADS_DIR) && existsSync(filePath)) unlinkSync(filePath);
+  } catch (e) {
+    console.warn("Failed to delete upload", url, e);
+  }
 }
 
 // ─── Auth Middleware ─────────────────────────────────────────────────────────────
@@ -115,6 +133,11 @@ app.put("/api/content/:section", authMiddleware, (req, res) => {
   if (!CONTENT_SECTIONS.includes(section) && !["experience", "projects", "settings"].includes(section)) {
     return res.status(404).json({ error: "Section not found" });
   }
+  // When the resume is replaced, clean up the previously uploaded PDF.
+  if (section === "settings") {
+    const old = readJSON("settings.json");
+    if (old?.resumeUrl && old.resumeUrl !== req.body?.resumeUrl) deleteUploadByUrl(old.resumeUrl);
+  }
   writeJSON(`${section}.json`, req.body);
   res.json({ success: true });
 });
@@ -181,17 +204,52 @@ app.post("/api/projects", authMiddleware, (req, res) => {
   res.json(project);
 });
 
+// NOTE: must be registered before "/api/projects/:id" so "reorder" isn't
+// captured as an :id. Reorders the full array (preserving caseStudy etc.).
+app.put("/api/projects/reorder", authMiddleware, (req, res) => {
+  const { ids } = req.body || {};
+  if (!Array.isArray(ids)) return res.status(400).json({ error: "ids array required" });
+  const data = readJSON("projects.json") || { projects: [] };
+  const byId = new Map(data.projects.map((p: any) => [p.id, p]));
+  const reordered = ids.map((id: string) => byId.get(id)).filter(Boolean);
+  // Safety: keep any project not present in `ids` so nothing is ever dropped.
+  for (const p of data.projects) if (!ids.includes(p.id)) reordered.push(p);
+  reordered.forEach((p: any, i: number) => { p.order = i; });
+  data.projects = reordered;
+  writeJSON("projects.json", data);
+  res.json({ success: true });
+});
+
+const projectImageUrls = (p: any): string[] =>
+  [
+    ...(p?.gallery || []),
+    ...((p?.caseStudy?.processSteps || []).map((s: any) => s.imageUrl)),
+  ].filter(Boolean);
+
 app.put("/api/projects/:id", authMiddleware, (req, res) => {
   const data = readJSON("projects.json") || { projects: [] };
   const idx = data.projects.findIndex((p: any) => p.id === req.params.id);
   if (idx === -1) return res.status(404).json({ error: "Project not found" });
-  data.projects[idx] = { ...data.projects[idx], ...req.body };
+  const merged = { ...data.projects[idx], ...req.body };
+  // Delete upload files that were removed/replaced in this save (only now that
+  // the change is actually persisted, so cancelling an edit never orphans a ref).
+  const newUrls = new Set(projectImageUrls(merged));
+  projectImageUrls(data.projects[idx]).forEach((url) => {
+    if (!newUrls.has(url)) deleteUploadByUrl(url);
+  });
+  data.projects[idx] = merged;
   writeJSON("projects.json", data);
   res.json(data.projects[idx]);
 });
 
 app.delete("/api/projects/:id", authMiddleware, (req, res) => {
   const data = readJSON("projects.json") || { projects: [] };
+  const project = data.projects.find((p: any) => p.id === req.params.id);
+  if (project) {
+    // Clean up this project's uploaded images so they don't orphan in /uploads.
+    (project.gallery || []).forEach(deleteUploadByUrl);
+    (project.caseStudy?.processSteps || []).forEach((s: any) => deleteUploadByUrl(s.imageUrl));
+  }
   data.projects = data.projects.filter((p: any) => p.id !== req.params.id);
   writeJSON("projects.json", data);
   res.json({ success: true });
@@ -217,6 +275,49 @@ app.post("/api/upload", authMiddleware, upload.single("file"), (req, res) => {
   res.json({ url, filename: req.file.filename });
 });
 
+// Delete a previously uploaded file (called when an image is replaced/removed).
+app.delete("/api/upload", authMiddleware, (req, res) => {
+  deleteUploadByUrl(req.body?.url);
+  res.json({ success: true });
+});
+
+// ─── CONTACT MESSAGES ────────────────────────────────────────────────────────────
+
+app.get("/api/messages", authMiddleware, (_req, res) => {
+  const data = readJSON("messages.json") || { messages: [] };
+  res.json(data.messages);
+});
+
+// Public: the site's contact form posts here.
+app.post("/api/messages", (req, res) => {
+  const { name, email, subject, message } = req.body || {};
+  if (!name || !email || !message) return res.status(400).json({ error: "Name, email, and message are required" });
+  const data = readJSON("messages.json") || { messages: [] };
+  const entry = {
+    id: `msg-${generateId()}`,
+    name, email, subject: subject || "", message,
+    read: false,
+    createdAt: new Date().toISOString(),
+  };
+  data.messages.unshift(entry);
+  writeJSON("messages.json", data);
+  res.json({ success: true });
+});
+
+app.put("/api/messages/:id/read", authMiddleware, (req, res) => {
+  const data = readJSON("messages.json") || { messages: [] };
+  const msg = data.messages.find((m: any) => m.id === req.params.id);
+  if (msg) { msg.read = true; writeJSON("messages.json", data); }
+  res.json({ success: true });
+});
+
+app.delete("/api/messages/:id", authMiddleware, (req, res) => {
+  const data = readJSON("messages.json") || { messages: [] };
+  data.messages = data.messages.filter((m: any) => m.id !== req.params.id);
+  writeJSON("messages.json", data);
+  res.json({ success: true });
+});
+
 // ─── ALL CONTENT (for dashboard stats) ───────────────────────────────────────────
 
 app.get("/api/stats", (_req, res) => {
@@ -224,12 +325,14 @@ app.get("/api/stats", (_req, res) => {
   const experience = readJSON("experience.json");
   const testimonials = readJSON("testimonials.json");
   const skills = readJSON("skills.json");
+  const messages = readJSON("messages.json");
 
   res.json({
     projects: projects?.projects?.length || 0,
     experiences: experience?.experiences?.length || 0,
     testimonials: testimonials?.testimonials?.length || 0,
     skills: (skills?.coreSkills?.length || 0) + (skills?.aiToolkit?.length || 0),
+    unreadMessages: (messages?.messages || []).filter((m: any) => !m.read).length,
   });
 });
 

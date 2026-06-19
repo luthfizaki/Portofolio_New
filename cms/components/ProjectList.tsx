@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2, Edit3, Eye, EyeOff } from "lucide-react";
+import { Plus, Trash2, Edit3, EyeOff, ChevronUp, ChevronDown } from "lucide-react";
 import { EditorShell, Card } from "./EditorUI";
-import { getProjects, deleteProject } from "./api";
+import { getProjects, deleteProject, reorderProjects } from "./api";
 
 export function ProjectList() {
   const [projects, setProjects] = useState<any[]>([]);
@@ -28,6 +28,20 @@ export function ProjectList() {
     navigate("/cms/projects/new");
   };
 
+  const handleMove = async (index: number, dir: -1 | 1) => {
+    const to = index + dir;
+    if (to < 0 || to >= projects.length) return;
+    const next = [...projects];
+    [next[index], next[to]] = [next[to], next[index]];
+    setProjects(next); // optimistic update
+    try {
+      await reorderProjects(next.map(p => p.id));
+    } catch (e) {
+      console.error(e);
+      fetchProjects(); // revert from server on failure
+    }
+  };
+
   return (
     <EditorShell title="Projects" description="Manage featured projects and case studies">
       <div className="flex justify-end mb-2">
@@ -42,10 +56,11 @@ export function ProjectList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {projects.map(proj => (
+          {projects.map((proj, index) => (
             <Card key={proj.id} className="group hover:border-white/10 transition-all">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
+                  <span className="text-[#8B9DBB]/40 font-mono text-xs w-5 shrink-0">{(index + 1).toString().padStart(2, "0")}</span>
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: proj.hex }} />
                   <div>
                     <h3 className="text-sm font-medium text-white">{proj.title}</h3>
@@ -54,8 +69,10 @@ export function ProjectList() {
                 </div>
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   {proj.status === "draft" && <EyeOff className="w-3.5 h-3.5 text-yellow-500/50" />}
-                  <button onClick={() => navigate(`/cms/projects/${proj.id}`)} className="p-1.5 rounded-lg hover:bg-white/5 text-[#8B9DBB] hover:text-white transition-all"><Edit3 className="w-3.5 h-3.5" /></button>
-                  <button onClick={() => handleDelete(proj.id, proj.title)} className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#8B9DBB]/30 hover:text-red-400 transition-all"><Trash2 className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => handleMove(index, -1)} disabled={index === 0} title="Move up" className="p-1.5 rounded-lg hover:bg-white/5 text-[#8B9DBB] hover:text-white transition-all disabled:opacity-25 disabled:cursor-not-allowed"><ChevronUp className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => handleMove(index, 1)} disabled={index === projects.length - 1} title="Move down" className="p-1.5 rounded-lg hover:bg-white/5 text-[#8B9DBB] hover:text-white transition-all disabled:opacity-25 disabled:cursor-not-allowed"><ChevronDown className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => navigate(`/cms/projects/${proj.id}`)} title="Edit" className="p-1.5 rounded-lg hover:bg-white/5 text-[#8B9DBB] hover:text-white transition-all"><Edit3 className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => handleDelete(proj.id, proj.title)} title="Delete" className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#8B9DBB]/30 hover:text-red-400 transition-all"><Trash2 className="w-3.5 h-3.5" /></button>
                 </div>
               </div>
               <p className="text-[#8B9DBB] text-xs leading-relaxed line-clamp-2">{proj.overview}</p>

@@ -441,7 +441,7 @@ export const ProjectsSection = () => {
           })}
           
           {/* View All Projects Button (Mobile Only) */}
-          <button className="project-card w-full h-[56px] bg-[#0A1128]/40 border border-[#2B7FFF]/20 rounded-[18px] flex items-center justify-between px-5 py-2 mt-2 active:scale-[0.98] transition-transform shadow-[inset_0_0_15px_rgba(43,127,255,0.05),_0_4px_10px_rgba(0,0,0,0.2)]">
+          <button onClick={() => navigate("/projects")} className="project-card w-full h-[56px] bg-[#0A1128]/40 border border-[#2B7FFF]/20 rounded-[18px] flex items-center justify-between px-5 py-2 mt-2 active:scale-[0.98] transition-transform shadow-[inset_0_0_15px_rgba(43,127,255,0.05),_0_4px_10px_rgba(0,0,0,0.2)]">
              <span className="text-[#2B7FFF] font-mono text-[11px] uppercase tracking-[0.2em] font-medium">
                 View All Projects
              </span>
@@ -523,13 +523,13 @@ export const ProjectsSection = () => {
             )
           })}
           
-          {/* More Projects Slot */}
-          <div className="project-card group relative rounded-[1.5rem] lg:rounded-[2rem] border border-dashed border-white/10 flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-white/30 hover:bg-[#0A1128]/40 h-[180px] w-full backdrop-blur-md cursor-pointer">
-             <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center mb-2 bg-white/5 group-hover:bg-white/10 group-hover:border-white/30 transition-all duration-300">
-               <Search className="w-4 h-4 text-white/30 group-hover:text-white/70" />
+          {/* View All Projects Slot */}
+          <button onClick={() => navigate("/projects")} className="project-card group relative rounded-[1.5rem] lg:rounded-[2rem] border border-dashed border-white/10 flex flex-col items-center justify-center text-center transition-all duration-300 hover:border-[#2B7FFF]/40 hover:bg-[#0A1128]/40 h-[180px] w-full backdrop-blur-md cursor-pointer">
+             <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center mb-2 bg-white/5 group-hover:bg-[#2B7FFF]/15 group-hover:border-[#2B7FFF]/30 transition-all duration-300">
+               <ArrowUpRight className="w-4 h-4 text-white/30 group-hover:text-[#2B7FFF]" />
              </div>
-             <span className="text-xs font-medium text-white/50 group-hover:text-white/80 transition-colors">More projects<br/>coming soon</span>
-          </div>
+             <span className="text-xs font-medium text-white/50 group-hover:text-white/80 transition-colors">View all<br/>projects</span>
+          </button>
         </div>
 
         {/* DYNAMIC PROJECT PREVIEW AREA (DESKTOP) */}

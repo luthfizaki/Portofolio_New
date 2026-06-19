@@ -12,6 +12,7 @@ import { ProcessEditor } from "./ProcessEditor";
 import { TestimonialsEditor } from "./TestimonialsEditor";
 import { SkillsEditor } from "./SkillsEditor";
 import { ContactEditor } from "./ContactEditor";
+import { MessagesEditor } from "./MessagesEditor";
 import { SettingsEditor } from "./SettingsEditor";
 
 function AuthGuard({ children }: { children: ReactNode }) {
@@ -44,6 +45,7 @@ export function CMSApp() {
         <Route path="testimonials" element={<TestimonialsEditor />} />
         <Route path="skills" element={<SkillsEditor />} />
         <Route path="contact" element={<ContactEditor />} />
+        <Route path="messages" element={<MessagesEditor />} />
         <Route path="settings" element={<SettingsEditor />} />
       </Route>
     </Routes>

@@ -1,8 +1,9 @@
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Trash2, Upload, Image as ImageIcon, Loader2 } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Upload, Image as ImageIcon, Loader2, AlertCircle, ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 import { EditorShell, Card, FormField, Input, Textarea, SaveButton } from "./EditorUI";
 import { getProject, createProject, updateProject, uploadFile, uploadFiles } from "./api";
+import { useUnsavedGuard } from "./useUnsavedGuard";
 
 // Blank project used by the "new" route. Nothing is written to the backend
 // until the user explicitly saves.
@@ -30,22 +31,37 @@ export function ProjectEditor() {
   const [data, setData] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  // Snapshot of the last-persisted state; drives the unsaved-changes guard.
+  const savedSnapshot = useRef<string>("");
 
   useEffect(() => {
-    if (id) getProject(id).then(setData).catch(console.error);
-    else setData(blankProject()); // New project: start from a blank in-memory draft
+    if (id) {
+      getProject(id).then((d) => { setData(d); savedSnapshot.current = JSON.stringify(d); }).catch(console.error);
+    } else {
+      const blank = blankProject();
+      setData(blank);
+      savedSnapshot.current = JSON.stringify(blank);
+    }
   }, [id]);
 
+  const dirty = !!data && JSON.stringify(data) !== savedSnapshot.current;
+  useUnsavedGuard(dirty);
+
+  const titleValid = !!data?.title?.trim();
+
   const handleSave = async () => {
+    if (!titleValid) return;
     setSaving(true);
     try {
       if (isNew) {
         // Create only now, then move to the real edit URL so future saves update it.
         const created = await createProject(data);
         setData(created);
+        savedSnapshot.current = JSON.stringify(created);
         navigate(`/cms/projects/${created.id}`, { replace: true });
       } else {
         await updateProject(id!, data);
+        savedSnapshot.current = JSON.stringify(data);
       }
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
@@ -55,6 +71,15 @@ export function ProjectEditor() {
     } finally {
       setSaving(false);
     }
+  };
+
+  // Move an item within an array field (used by gallery + process steps).
+  const moveItem = <T,>(arr: T[], from: number, to: number): T[] => {
+    if (to < 0 || to >= arr.length) return arr;
+    const next = [...arr];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    return next;
   };
 
   const updateCaseStudy = (field: string, value: any) => {
@@ -75,6 +100,10 @@ export function ProjectEditor() {
 
   const removeStep = (i: number) => {
     updateCaseStudy("processSteps", data.caseStudy.processSteps.filter((_: any, idx: number) => idx !== i));
+  };
+
+  const moveStep = (from: number, to: number) => {
+    updateCaseStudy("processSteps", moveItem(data.caseStudy?.processSteps || [], from, to));
   };
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>, stepIndex: number) => {
@@ -107,6 +136,10 @@ export function ProjectEditor() {
     setData((d: any) => ({ ...d, gallery: (d.gallery || []).filter((_: any, idx: number) => idx !== i) }));
   };
 
+  const moveGalleryImage = (from: number, to: number) => {
+    setData((d: any) => ({ ...d, gallery: moveItem(d.gallery || [], from, to) }));
+  };
+
   const addToArray = (field: string) => {
     setData({ ...data, [field]: [...(data[field] || []), ""] });
   };
@@ -134,7 +167,10 @@ export function ProjectEditor() {
       <Card>
         <h3 className="text-sm font-medium mb-4">Basic Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField label="Title"><Input value={data.title} onChange={v => setData({ ...data, title: v })} /></FormField>
+          <FormField label="Title">
+            <Input value={data.title} onChange={v => setData({ ...data, title: v })} placeholder="Required" />
+            {!titleValid && <span className="text-red-400/80 text-xs flex items-center gap-1 mt-1"><AlertCircle className="w-3 h-3" /> Title is required</span>}
+          </FormField>
           <FormField label="Category"><Input value={data.category} onChange={v => setData({ ...data, category: v })} /></FormField>
           <FormField label="Full Category"><Input value={data.fullCategory} onChange={v => setData({ ...data, fullCategory: v })} /></FormField>
           <FormField label="Icon Name"><Input value={data.iconName} onChange={v => setData({ ...data, iconName: v })} /></FormField>
@@ -193,6 +229,10 @@ export function ProjectEditor() {
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
                 <span className="absolute bottom-1.5 left-1.5 text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/60 text-white/70">{i + 1}</span>
+                <div className="absolute bottom-1.5 right-1.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                  <button onClick={() => moveGalleryImage(i, i - 1)} disabled={i === 0} title="Move left" className="w-6 h-6 rounded bg-black/60 backdrop-blur text-white/80 hover:bg-black/80 disabled:opacity-25 disabled:cursor-not-allowed flex items-center justify-center"><ChevronLeft className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => moveGalleryImage(i, i + 1)} disabled={i === (data.gallery || []).length - 1} title="Move right" className="w-6 h-6 rounded bg-black/60 backdrop-blur text-white/80 hover:bg-black/80 disabled:opacity-25 disabled:cursor-not-allowed flex items-center justify-center"><ChevronRight className="w-3.5 h-3.5" /></button>
+                </div>
               </div>
             ))}
           </div>
@@ -257,7 +297,11 @@ export function ProjectEditor() {
             <div key={step.id} className="bg-[#0A1128] border border-white/5 rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs text-[#5C32FF] font-mono">Step {i + 1}</span>
-                <button onClick={() => removeStep(i)} className="text-[#8B9DBB]/30 hover:text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>
+                <div className="flex items-center gap-1.5">
+                  <button onClick={() => moveStep(i, i - 1)} disabled={i === 0} title="Move up" className="text-[#8B9DBB]/40 hover:text-white disabled:opacity-25 disabled:cursor-not-allowed"><ChevronUp className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => moveStep(i, i + 1)} disabled={i === (data.caseStudy?.processSteps || []).length - 1} title="Move down" className="text-[#8B9DBB]/40 hover:text-white disabled:opacity-25 disabled:cursor-not-allowed"><ChevronDown className="w-3.5 h-3.5" /></button>
+                  <button onClick={() => removeStep(i)} title="Delete step" className="text-[#8B9DBB]/30 hover:text-red-400 ml-1"><Trash2 className="w-3.5 h-3.5" /></button>
+                </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <FormField label="Title"><Input value={step.title} onChange={v => updateStep(i, "title", v)} /></FormField>
@@ -279,7 +323,10 @@ export function ProjectEditor() {
         </div>
       </Card>
 
-      <div className="flex justify-end"><SaveButton onClick={handleSave} saving={saving} saved={saved} /></div>
+      <div className="flex justify-end items-center gap-3">
+        {dirty && !saved && <span className="text-[#8B9DBB]/60 text-xs">Unsaved changes</span>}
+        <SaveButton onClick={handleSave} saving={saving} saved={saved} disabled={!titleValid} />
+      </div>
     </EditorShell>
   );
 }

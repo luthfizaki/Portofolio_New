@@ -122,15 +122,25 @@ export const ContactSection = () => {
     return () => ctx.revert();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formState),
+      });
+      if (!res.ok) throw new Error("Request failed");
       setSubmitted(true);
       setFormState({ name: "", email: "", subject: "", message: "" });
       setTimeout(() => setSubmitted(false), 5000);
-    }, 1500);
+    } catch (err) {
+      console.error(err);
+      alert("Maaf, pesan gagal terkirim. Coba lagi atau hubungi via email.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

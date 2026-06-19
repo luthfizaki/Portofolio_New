@@ -1,7 +1,15 @@
 node_modules/
 build/
+dist/
 coverage/
 .DS_Store
 *.log
 .env*
 !.env.example
+
+# User-uploaded content (served at runtime, not source)
+/public/uploads/
+/dist/uploads/
+
+# Local debug screenshots / test artifacts at repo root
+/*.png

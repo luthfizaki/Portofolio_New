@@ -2,7 +2,7 @@ import { type ReactNode } from "react";
 import { NavLink, useNavigate, Outlet } from "react-router-dom";
 import {
   LayoutDashboard, Home, User, Briefcase, FolderOpen, Workflow,
-  MessageSquare, Wrench, Mail, Settings, LogOut, Shield, ExternalLink
+  MessageSquare, Wrench, Mail, Settings, LogOut, Shield, ExternalLink, Inbox
 } from "lucide-react";
 
 const navItems = [
@@ -15,6 +15,7 @@ const navItems = [
   { to: "/cms/testimonials", icon: MessageSquare, label: "Testimonials" },
   { to: "/cms/skills", icon: Wrench, label: "Skills & Tools" },
   { to: "/cms/contact", icon: Mail, label: "Contact" },
+  { to: "/cms/messages", icon: Inbox, label: "Messages" },
   { to: "/cms/settings", icon: Settings, label: "Settings" },
 ];
 

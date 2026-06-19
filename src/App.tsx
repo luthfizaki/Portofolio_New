@@ -16,9 +16,10 @@ import { Footer } from "./components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Lazy-load CMS and project detail pages
+// Lazy-load CMS and project detail/index pages
 const CMSApp = lazy(() => import("../cms/components/CMSApp").then(m => ({ default: m.CMSApp })));
 const ProjectDetailPage = lazy(() => import("./pages/ProjectDetailPage").then(m => ({ default: m.ProjectDetailPage })));
+const ProjectsIndexPage = lazy(() => import("./pages/ProjectsIndexPage").then(m => ({ default: m.ProjectsIndexPage })));
 
 function PortfolioPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,6 +49,7 @@ export default function App() {
         <Suspense fallback={<div className="min-h-screen bg-[#060A14] flex items-center justify-center"><div className="text-[#2B7FFF] font-mono text-sm animate-pulse">Loading...</div></div>}>
           <Routes>
             <Route path="/" element={<PortfolioPage />} />
+            <Route path="/projects" element={<ProjectsIndexPage />} />
             <Route path="/project/:id" element={<ProjectDetailPage />} />
             <Route path="/cms/*" element={<CMSApp />} />
           </Routes>
