@@ -336,9 +336,43 @@ app.get("/api/stats", (_req, res) => {
   });
 });
 
+// ─── PRODUCTION: SERVE STATIC FILES ──────────────────────────────────────────────
+
+const DIST_DIR = path.join(__dirname, "..", "dist");
+
+// Serve uploaded files
+app.use("/uploads", express.static(UPLOADS_DIR));
+
+// In production, serve the built Vite app
+if (process.env.NODE_ENV === "production") {
+  // Serve static assets (JS, CSS, images, fonts)
+  app.use(express.static(DIST_DIR));
+
+  // API routes are already defined above — they take priority
+
+  // SPA fallback: any non-API GET returns index.html
+  app.get("*", (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith("/api/")) return next();
+    if (req.path.startsWith("/uploads/")) return next();
+    res.sendFile(path.join(DIST_DIR, "index.html"));
+  });
+}
+
 // ─── START SERVER ────────────────────────────────────────────────────────────────
 
-const PORT = 3001;
+const PORT = parseInt(process.env.PORT || "3001");
+
+// Initialize messages.json if missing (needed for stats endpoint)
+if (!existsSync(path.join(DATA_DIR, "messages.json"))) {
+  writeJSON("messages.json", { messages: [] });
+}
+
 app.listen(PORT, () => {
-  console.log(`CMS API server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
+  if (process.env.NODE_ENV === "production") {
+    console.log(`Serving static files from: ${DIST_DIR}`);
+  }
+  console.log(`API available at: http://localhost:${PORT}/api`);
 });

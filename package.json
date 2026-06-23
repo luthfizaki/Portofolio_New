@@ -8,6 +8,7 @@
     "dev:vite": "vite --port=3000 --host=0.0.0.0",
     "dev:server": "tsx watch cms/server.ts",
     "build": "vite build",
+    "start": "NODE_ENV=production tsx cms/server.ts",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
