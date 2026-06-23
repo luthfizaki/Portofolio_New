@@ -1,27 +1,29 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Calendar, MapPin, User, Code, Activity, ArrowUpRight } from "lucide-react";
+import { Calendar, MapPin, User, Code, Activity, PenTool, ClipboardCheck, ArrowUpRight, type LucideIcon } from "lucide-react";
 import { ExperienceBackground } from "./ExperienceBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const experiencesData = [
+// Ordered newest → oldest so the most recent role sits at the top.
+const experiencesData: {
+  year: string;
+  company: string;
+  role: string;
+  date: string;
+  location: string;
+  description: string;
+  icon: LucideIcon;
+}[] = [
   {
-    year: "2018",
-    company: "PT. AZIMUTH SOLUTION",
-    role: "Front-End Developer",
-    date: "Jan 2018 – Mar 2018",
-    location: "Jakarta, Indonesia",
-    description: "Developed responsive web interfaces and collaborated on digital product implementation using modern frontend technologies."
-  },
-  {
-    year: "2021",
-    company: "Freelance",
+    year: "2023",
+    company: "PT. SELERIS MEDITEKNO INTERNASIONAL",
     role: "UI/UX Designer",
-    date: "Jan 2021 – Present",
-    location: "Remote",
-    description: "Collaborating with startups and businesses to create user-centered digital products, dashboards, and mobile applications across various industries."
+    date: "Nov 2023 – Present",
+    location: "Jakarta, Indonesia",
+    description: "Designing AI-powered health-tech and insurance platforms focused on usability, workflow efficiency, and scalable enterprise experiences.",
+    icon: Activity
   },
   {
     year: "2022",
@@ -29,7 +31,8 @@ const experiencesData = [
     role: "UI Designer",
     date: "Mar 2022 – Aug 2022",
     location: "Jakarta, Indonesia",
-    description: "Designed enterprise dashboard systems and digital interfaces with a focus on clarity, information hierarchy, and usability."
+    description: "Designed enterprise dashboard systems and digital interfaces with a focus on clarity, information hierarchy, and usability.",
+    icon: PenTool
   },
   {
     year: "2022",
@@ -37,15 +40,26 @@ const experiencesData = [
     role: "Quality Assurance Intern",
     date: "Mar 2022 – Aug 2022",
     location: "Jakarta, Indonesia",
-    description: "Supported product quality through testing, usability validation, and User Acceptance Testing processes."
+    description: "Supported product quality through testing, usability validation, and User Acceptance Testing processes.",
+    icon: ClipboardCheck
   },
   {
-    year: "2023",
-    company: "PT. SELERIS MEDITEKNO INTERNASIONAL",
+    year: "2021",
+    company: "Freelance",
     role: "UI/UX Designer",
-    date: "Nov 2023 – Present",
+    date: "Jan 2021 – Present",
+    location: "Remote",
+    description: "Collaborating with startups and businesses to create user-centered digital products, dashboards, and mobile applications across various industries.",
+    icon: User
+  },
+  {
+    year: "2018",
+    company: "PT. AZIMUTH SOLUTION",
+    role: "Front-End Developer",
+    date: "Jan 2018 – Mar 2018",
     location: "Jakarta, Indonesia",
-    description: "Designing AI-powered health-tech and insurance platforms focused on usability, workflow efficiency, and scalable enterprise experiences."
+    description: "Developed responsive web interfaces and collaborated on digital product implementation using modern frontend technologies.",
+    icon: Code
   }
 ];
 
@@ -306,136 +320,75 @@ export const ExperienceSection = () => {
          </div>
 
 
-         {/* Mobile View Container */}
+         {/* Mobile View Container — data-driven, newest first */}
          <div className="flex md:hidden flex-col w-full mt-8 relative z-10 px-0 sm:px-4">
-            {/* Global Continuous Line */}
-            <div className="absolute top-[32px] bottom-[30px] left-[20px] w-px bg-white/10 z-0" />
-            <div className="absolute top-[32px] h-[190px] left-[20px] w-px bg-[#2B7FFF] shadow-[0_0_15px_rgba(43,127,255,1)] z-0" />
+            {/* Continuous timeline rail */}
+            <div className="absolute top-[34px] bottom-[86px] left-[20px] w-px bg-white/10 z-0" />
+            {/* Glowing "now" segment fading into the past */}
+            <div className="absolute top-[34px] h-[150px] left-[20px] w-[2px] bg-gradient-to-b from-[#2B7FFF] via-[#2B7FFF]/60 to-transparent shadow-[0_0_15px_rgba(43,127,255,0.8)] z-0" />
 
-            {/* Item 1 - Active */}
-            <div className="relative w-full border border-[#2B7FFF]/40 bg-[#2B7FFF]/[0.02] backdrop-blur-md rounded-[20px] p-5 shadow-[inset_0_0_30px_rgba(43,127,255,0.05),_0_8px_32px_rgba(0,0,0,0.3)] mb-4">
-               {/* Node Dot */}
-               <div className="absolute left-[20px] top-[36px] -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-[2px] border-[#2B7FFF] bg-[#020617] flex items-center justify-center z-10 shadow-[0_0_15px_rgba(43,127,255,0.6)]">
-                 <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,1)]" />
-               </div>
-               
-               <div className="pl-[36px]">
-                  {/* Date */}
-                  <div className="font-mono text-[9px] tracking-[0.1em] text-[#2B7FFF] uppercase mb-1.5">
-                    MAR 2022 - AUG 2022
+            {experiencesData.map((exp, i) => {
+              const active = i === 0;
+              const Icon = exp.icon;
+              return (
+                <div key={i} className="relative w-full mb-3">
+                  {/* Node dot */}
+                  <div
+                    className={`absolute left-[20px] top-[30px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#020617] flex items-center justify-center z-10 transition-all ${
+                      active
+                        ? "w-4 h-4 border-[2px] border-[#2B7FFF] shadow-[0_0_15px_rgba(43,127,255,0.7)]"
+                        : "w-3 h-3 border-[2px] border-white/15"
+                    }`}
+                  >
+                    <div className={`rounded-full ${active ? "w-1.5 h-1.5 bg-white shadow-[0_0_8px_rgba(255,255,255,1)]" : "w-1 h-1 bg-white/30"}`} />
                   </div>
-                  
-                  <div className="flex justify-between items-start mb-3 gap-2">
-                    <div className="flex flex-col gap-1 pr-2">
-                      <h3 className="text-[14px] font-semibold text-white tracking-wide uppercase leading-snug">
-                        PT. TRI NINDYA UTAMA
-                      </h3>
-                      <span className="text-[#2B7FFF] font-mono text-[10px] uppercase font-medium tracking-wider">
-                        UI Designer
-                      </span>
-                      <div className="flex items-center gap-1.5 text-white/40 text-[10px] mt-1">
-                        <MapPin className="w-2.5 h-2.5" />
-                        <span>Jakarta, Indonesia</span>
+
+                  <div
+                    className={`ml-[44px] rounded-[20px] transition-colors ${
+                      active
+                        ? "border border-[#2B7FFF]/40 bg-[#2B7FFF]/[0.03] p-5 shadow-[inset_0_0_30px_rgba(43,127,255,0.05),_0_8px_32px_rgba(0,0,0,0.3)]"
+                        : "border border-white/5 bg-[#060A14]/40 p-4"
+                    }`}
+                  >
+                    {/* Date */}
+                    <div className={`font-mono text-[9px] tracking-[0.1em] uppercase mb-1.5 ${active ? "text-[#2B7FFF]" : "text-[#2B7FFF]/70"}`}>
+                      {exp.date.toUpperCase()}
+                    </div>
+
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="flex flex-col gap-1 pr-2 min-w-0">
+                        <h3 className="text-[14px] font-semibold text-white tracking-wide uppercase leading-snug">
+                          {exp.company}
+                        </h3>
+                        <span className="text-[#2B7FFF] font-mono text-[10px] uppercase font-medium tracking-wider">
+                          {exp.role}
+                        </span>
+                        <div className="flex items-center gap-1.5 text-white/40 text-[10px] mt-1">
+                          <MapPin className="w-2.5 h-2.5 shrink-0" />
+                          <span className="truncate">{exp.location}</span>
+                        </div>
                       </div>
+                      {/* Icon box */}
+                      {active ? (
+                        <div className="w-[42px] h-[42px] rounded-[12px] bg-gradient-to-br from-[#2B7FFF] to-[#5C32FF] shrink-0 shadow-[0_4px_16px_rgba(43,127,255,0.25)] flex items-center justify-center">
+                          <Icon className="w-5 h-5 text-white" strokeWidth={1.75} />
+                        </div>
+                      ) : (
+                        <div className="w-[42px] h-[42px] rounded-[12px] bg-[#020617] border border-white/5 shrink-0 flex items-center justify-center text-[#2B7FFF]/70">
+                          <Icon className="w-[18px] h-[18px]" strokeWidth={1.5} />
+                        </div>
+                      )}
                     </div>
-                    {/* Icon Box */}
-                    <div className="w-[42px] h-[42px] rounded-[12px] bg-gradient-to-br from-[#2B7FFF] to-[#5C32FF] shrink-0 shadow-[0_4px_16px_rgba(43,127,255,0.2)] flex items-center justify-center relative overflow-hidden mt-0.5">
-                       <div className="w-5 h-5 bg-white shadow-sm rounded border border-black/5 absolute z-10" />
-                       <div className="w-5 h-5 bg-white/40 shadow-sm rounded border border-black/5 absolute transform translate-x-1 translate-y-1 z-0 backdrop-blur-sm" />
-                    </div>
-                  </div>
 
-                  <div className="w-full h-px bg-white/5 my-3" />
-                  
-                  <p className="text-white/60 text-[12px] leading-[1.6] font-light">
-                    Designed enterprise dashboard systems and digital interfaces with a focus on clarity, information hierarchy, and usability.
-                  </p>
-               </div>
-            </div>
+                    {active && <div className="w-full h-px bg-white/5 my-3" />}
 
-            {/* Item 2 - Inactive */}
-            <div className="relative w-full p-4 mb-2">
-               {/* Node Dot */}
-               <div className="absolute left-[20px] top-[24px] -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-[2px] border-white/10 bg-[#020617] flex items-center justify-center z-10" />
-               
-               <div className="pl-[36px]">
-                  <div className="font-mono text-[9px] tracking-[0.1em] text-[#2B7FFF] uppercase mb-1.5 opacity-90">
-                    JAN 2021 - PRESENT
+                    <p className={`text-white/55 text-[12px] leading-[1.6] font-light ${active ? "" : "mt-2 line-clamp-2"}`}>
+                      {exp.description}
+                    </p>
                   </div>
-                  <div className="flex justify-between items-start mb-2 gap-2">
-                    <div className="flex flex-col gap-1 pr-2">
-                      <h3 className="text-[14px] font-semibold text-white tracking-wide uppercase leading-snug shadow-sm">
-                        FREELANCE
-                      </h3>
-                      <span className="text-[#2B7FFF] font-mono text-[10px] uppercase tracking-wider font-medium opacity-90">
-                        UI/UX Designer
-                      </span>
-                    </div>
-                    <div className="w-[42px] h-[42px] rounded-[12px] bg-[#020617] border border-white/5 shrink-0 flex items-center justify-center text-[#2B7FFF]/70">
-                       <User className="w-[18px] h-[18px]" />
-                    </div>
-                  </div>
-                  <p className="text-white/50 text-[12px] leading-[1.6] font-light">
-                    Working with clients worldwide to create user-centered digital products across various industries.
-                  </p>
-               </div>
-            </div>
-
-            {/* Item 3 - Inactive */}
-            <div className="relative w-full p-4 mb-2">
-               {/* Node Dot */}
-               <div className="absolute left-[20px] top-[24px] -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-[2px] border-white/10 bg-[#020617] flex items-center justify-center z-10" />
-               
-               <div className="pl-[36px]">
-                  <div className="font-mono text-[9px] tracking-[0.1em] text-[#2B7FFF] uppercase mb-1.5 opacity-90">
-                    JAN 2018 - MAR 2021
-                  </div>
-                  <div className="flex justify-between items-start mb-2 gap-2">
-                    <div className="flex flex-col gap-1 pr-2">
-                      <h3 className="text-[14px] font-semibold text-white tracking-wide uppercase leading-snug">
-                        PT. AZIMUTH SOLUTION
-                      </h3>
-                      <span className="text-[#2B7FFF] font-mono text-[10px] uppercase tracking-wider font-medium opacity-90">
-                        Front-End Developer
-                      </span>
-                    </div>
-                    <div className="w-[42px] h-[42px] rounded-[12px] bg-[#020617] border border-white/5 shrink-0 flex items-center justify-center text-[#2B7FFF]/70">
-                       <Code className="w-[18px] h-[18px]" />
-                    </div>
-                  </div>
-                  <p className="text-white/50 text-[12px] leading-[1.6] font-light">
-                    Built responsive web applications and collaborated with cross-functional teams to deliver high-quality solutions.
-                  </p>
-               </div>
-            </div>
-
-            {/* Item 4 - Inactive */}
-            <div className="relative w-full p-4 mb-2">
-               {/* Node Dot */}
-               <div className="absolute left-[20px] top-[24px] -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-[2px] border-white/10 bg-[#020617] flex items-center justify-center z-10" />
-               
-               <div className="pl-[36px]">
-                  <div className="font-mono text-[9px] tracking-[0.1em] text-[#2B7FFF] uppercase mb-1.5 opacity-90">
-                    NOV 2023 - PRESENT
-                  </div>
-                  <div className="flex justify-between items-start mb-2 gap-2">
-                    <div className="flex flex-col gap-1 pr-2">
-                      <h3 className="text-[14px] font-semibold text-white tracking-wide uppercase leading-snug">
-                        PT. SELERIS MEDITEKNO
-                      </h3>
-                      <span className="text-[#2B7FFF] font-mono text-[10px] uppercase tracking-wider font-medium opacity-90">
-                        UI/UX Designer
-                      </span>
-                    </div>
-                    <div className="w-[42px] h-[42px] rounded-[12px] bg-[#020617] border border-white/5 shrink-0 flex items-center justify-center text-[#2B7FFF]/70">
-                       <Activity className="w-[18px] h-[18px]" />
-                    </div>
-                  </div>
-                  <p className="text-white/50 text-[12px] leading-[1.6] font-light">
-                    Designing digital products for health-tech solutions that drive better outcomes.
-                  </p>
-               </div>
-            </div>
+                </div>
+              );
+            })}
 
             {/* View All Button */}
             <div className="mt-2 w-full">

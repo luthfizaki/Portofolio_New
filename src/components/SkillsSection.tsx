@@ -10,6 +10,7 @@ import {
   type LucideIcon
 } from "lucide-react";
 import { useContent } from "../context/ContentContext";
+import { DesktopAmbientBackground } from "./DesktopAmbientBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -206,6 +207,9 @@ export const SkillsSection = () => {
       {/* Ambient BG */}
       <div className="absolute top-[10%] right-[-5%] w-[400px] h-[400px] bg-[#2B7FFF]/10 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] bg-[#5C32FF]/10 blur-[150px] rounded-full pointer-events-none" />
+
+      {/* Desktop-only continuously-animated ambient layer. */}
+      <DesktopAmbientBackground tint="purple" secondary="blue" variant="b" />
 
       {/* Decorative Network in Header */}
       <div className="parallax-graphic absolute top-0 right-[-5%] w-[60%] h-[500px] pointer-events-none opacity-40 mix-blend-screen" data-speed="0.8">

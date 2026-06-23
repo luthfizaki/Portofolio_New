@@ -20,6 +20,7 @@ import {
   type LucideIcon
 } from "lucide-react";
 import { useContent } from "../context/ContentContext";
+import { DesktopAmbientBackground } from "./DesktopAmbientBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -304,13 +305,16 @@ export const ProjectsSection = () => {
       <div className="absolute bottom-0 left-0 w-[40vw] h-[40vw] bg-[#8B5CF6]/5 blur-[150px] rounded-full pointer-events-none" />
       
       {/* Texture */}
-      <div 
-        className="absolute inset-0 opacity-[0.02] pointer-events-none" 
-        style={{ 
-          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', 
-          backgroundSize: '24px 24px' 
-        }} 
+      <div
+        className="absolute inset-0 opacity-[0.02] pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+          backgroundSize: '24px 24px'
+        }}
       />
+
+      {/* Continuously-animated ambient layer (desktop only). */}
+      <DesktopAmbientBackground tint="blue" secondary="purple" showScan />
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 relative z-10" ref={gridRef}>
         
@@ -371,77 +375,58 @@ export const ProjectsSection = () => {
           </div>
         </div>
 
-        {/* MOBILE PROJECTS LIST */}
-        <div className="flex md:hidden flex-col gap-2.5 mb-8 w-full z-10 relative">
+        {/* MOBILE PROJECTS LIST — 2-column grid */}
+        <div className="grid grid-cols-2 md:hidden gap-2.5 mb-8 w-full z-10 relative">
           {projects.map((project, index) => {
             const Icon = project.icon;
             return (
               <button
                 key={project.id}
                 onClick={() => handleProjectClick(project)}
-                className="project-card w-full relative h-[94px] bg-[#0A1128]/60 border border-white/5 hover:border-white/10 rounded-[18px] flex items-center p-3 overflow-hidden text-left transition-colors active:bg-white/5"
+                className="project-card group w-full relative h-[152px] bg-[#0A1128]/60 border border-white/5 rounded-[18px] flex flex-col p-3.5 overflow-hidden text-left transition-colors active:bg-white/5"
               >
-                 {/* Icon */}
-                 <div className="w-[44px] h-[44px] rounded-[14px] bg-[#020617] border border-white/5 flex items-center justify-center shrink-0 z-10 shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                    <Icon className="w-5 h-5 text-white/90" />
-                 </div>
+                 {/* Accent corner glow */}
+                 <div
+                   className="absolute -top-8 -right-8 w-24 h-24 rounded-full pointer-events-none opacity-60"
+                   style={{ background: `radial-gradient(circle, ${project.hex}40 0%, transparent 70%)` }}
+                 />
 
-                 {/* Text Content */}
-                 <div className="ml-3 sm:ml-4 flex flex-col gap-1.5 flex-1 z-10 max-w-[45%]">
-                    <h4 className="text-[14px] sm:text-[15px] font-semibold text-white leading-tight truncate">
-                       {project.title}
-                    </h4>
-                    <span 
-                      className="inline-flex items-center justify-center px-1.5 py-[2px] rounded text-[8px] sm:text-[9px] font-mono w-max tracking-wide border border-transparent"
-                      style={{ backgroundColor: `${project.hex}25`, color: project.hex }}
+                 {/* Top row: icon + number */}
+                 <div className="flex items-start justify-between relative z-10">
+                    <div
+                      className="w-[40px] h-[40px] rounded-[12px] flex items-center justify-center shrink-0 border"
+                      style={{ backgroundColor: `${project.hex}1A`, borderColor: `${project.hex}33` }}
                     >
-                      {project.category}
-                    </span>
-                 </div>
-
-                 {/* CSS Mockup Representation */}
-                 <div className="absolute right-[52px] top-1/2 -translate-y-1/2 w-[100px] rounded-[10px] overflow-hidden border border-white/10 z-0 h-[70px] shadow-lg" 
-                      style={{ background: `linear-gradient(135deg, #0A1128 0%, ${project.hex}35 100%)` }}>
-                    <div className="absolute inset-0 opacity-60">
-                       <div className="absolute top-2 left-2 right-2 flex justify-between items-center">
-                          <span className="text-[6px] font-bold text-white tracking-wide truncate max-w-[60%]">{project.title.substring(0, 10)}</span>
-                          <div className="w-2.5 h-2.5 rounded-full border border-white/30 flex items-center justify-center bg-[#020617]/50">
-                             <div className="w-[2px] h-[2px] bg-white rounded-full"/>
-                          </div>
-                       </div>
-                       <div className="absolute top-[22px] left-2 w-3/4 h-[2px] bg-white/20 rounded-full" />
-                       <div className="absolute top-[28px] left-2 w-1/2 h-[2px] bg-white/10 rounded-full" />
-                       
-                       <div className="absolute top-[38px] left-2 right-2 flex gap-1.5">
-                          <div className="flex-1 h-6 bg-gradient-to-br from-[#020617]/50 to-transparent rounded-[4px] border border-white/5" />
-                          <div className="w-[30%] h-6 bg-white/5 rounded-[4px] border border-white/5" />
-                       </div>
+                      <Icon className="w-[18px] h-[18px] text-white" />
                     </div>
-                    {/* Floating Mobile Element for mobile apps */}
-                    {project.mockupType.includes('mobile') && (
-                      <div className="absolute -bottom-2 right-[-2px] w-[35px] h-[55px] bg-[#020617] rounded-[6px] border border-white/10 shadow-[0_4px_10px_rgba(0,0,0,0.5)] flex flex-col p-[3px] rotate-[-8deg]">
-                         <div className="w-1/3 h-[1px] bg-white/20 self-center rounded-full mb-1" />
-                         <div className="w-full h-5 bg-gradient-to-b from-[#1E293B] to-transparent rounded-[2px] border border-white/5 mb-1" />
-                         <div className="w-full h-[2px] bg-white/10 rounded-full" />
-                      </div>
-                    )}
-                 </div>
-
-                 {/* Right Side: Number & Arrow */}
-                 <div className="absolute right-4 top-0 bottom-0 py-4 flex flex-col justify-between items-end z-10 w-8">
-                    <span className="text-[#8B9DBB]/80 font-mono text-[11px] font-semibold leading-none">
+                    <span className="font-mono text-[11px] font-semibold text-white/30 leading-none mt-1">
                       0{index + 1}
                     </span>
-                    <div className="w-[24px] h-[24px] rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-white/70 shadow-sm">
-                      <ArrowRight className="w-3 h-3" />
+                 </div>
+
+                 {/* Bottom: title + category + arrow */}
+                 <div className="mt-auto relative z-10">
+                    <h4 className="text-[13px] font-semibold text-white leading-snug line-clamp-2 mb-2">
+                      {project.title}
+                    </h4>
+                    <div className="flex items-center justify-between gap-1.5">
+                      <span
+                        className="inline-flex items-center px-1.5 py-[2px] rounded text-[8px] font-mono tracking-wide truncate max-w-[72%]"
+                        style={{ backgroundColor: `${project.hex}25`, color: project.hex }}
+                      >
+                        {project.category}
+                      </span>
+                      <div className="w-[22px] h-[22px] rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-white/70 shrink-0">
+                        <ArrowRight className="w-3 h-3" />
+                      </div>
                     </div>
                  </div>
               </button>
             )
           })}
-          
-          {/* View All Projects Button (Mobile Only) */}
-          <button onClick={() => navigate("/projects")} className="project-card w-full h-[56px] bg-[#0A1128]/40 border border-[#2B7FFF]/20 rounded-[18px] flex items-center justify-between px-5 py-2 mt-2 active:scale-[0.98] transition-transform shadow-[inset_0_0_15px_rgba(43,127,255,0.05),_0_4px_10px_rgba(0,0,0,0.2)]">
+
+          {/* View All Projects Button (spans both columns) */}
+          <button onClick={() => navigate("/projects")} className="project-card col-span-2 w-full h-[56px] bg-[#0A1128]/40 border border-[#2B7FFF]/20 rounded-[18px] flex items-center justify-between px-5 py-2 mt-2 active:scale-[0.98] transition-transform shadow-[inset_0_0_15px_rgba(43,127,255,0.05),_0_4px_10px_rgba(0,0,0,0.2)]">
              <span className="text-[#2B7FFF] font-mono text-[11px] uppercase tracking-[0.2em] font-medium">
                 View All Projects
              </span>

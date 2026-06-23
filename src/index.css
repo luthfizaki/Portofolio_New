@@ -107,6 +107,35 @@ body {
   z-index: 0;
 }
 
+/* ─── Desktop ambient background (DesktopAmbientBackground.tsx) ───
+ * Continuous, GPU-cheap motion (transform/opacity only) so the large desktop
+ * sections never feel static. Desktop-only at the component level; the
+ * prefers-reduced-motion block below neutralizes all of these automatically. */
+@keyframes ambient-drift-a {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(5%, -4%, 0) scale(1.12); }
+}
+@keyframes ambient-drift-b {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-6%, 5%, 0) scale(1.08); }
+}
+@keyframes ambient-float {
+  0%, 100% { transform: translateY(0); opacity: 0.35; }
+  50%      { transform: translateY(-22px); opacity: 0.9; }
+}
+@keyframes ambient-twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50%      { opacity: 0.85; transform: scale(1.6); }
+}
+@keyframes ambient-dash {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes ambient-scan {
+  0%        { transform: translateY(0); opacity: 0; }
+  8%, 92%   { opacity: 1; }
+  100%      { transform: translateY(620px); opacity: 0; }
+}
+
 /* Keyframes backing the --animate-* theme tokens above */
 @keyframes spin-slow {
   to {

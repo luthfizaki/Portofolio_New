@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Search, PenTool, ClipboardCheck, Rocket, Sparkles, Target, Zap, Lightbulb, FileText, TrendingUp, MessageSquare, ArrowRight } from "lucide-react";
 import { MobileAmbientBackground } from "./MobileAmbientBackground";
+import { DesktopAmbientBackground } from "./DesktopAmbientBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -155,6 +156,8 @@ export const ProcessSection = () => {
 
       {/* Mobile-only ambient parallax field (desktop unaffected). */}
       <MobileAmbientBackground tint="purple" />
+      {/* Desktop idle motion — constellation off here (section already has its own network graphic). */}
+      <DesktopAmbientBackground tint="purple" secondary="blue" variant="b" showConstellation={false} />
       <div className="parallax-bg absolute top-[40%] left-[20%] w-[30vw] h-[30vw] bg-white/[0.02] blur-[100px] rounded-full pointer-events-none mix-blend-screen" data-speed="1.5" />
 
       {/* Floating Particles */}

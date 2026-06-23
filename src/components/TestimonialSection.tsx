@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Quote } from "lucide-react";
 import { useContent } from "../context/ContentContext";
 import { MobileAmbientBackground } from "./MobileAmbientBackground";
+import { DesktopAmbientBackground } from "./DesktopAmbientBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -82,6 +83,8 @@ export const TestimonialSection = () => {
 
       {/* Mobile-only ambient parallax field (desktop unaffected). */}
       <MobileAmbientBackground tint="blue" />
+      {/* Desktop-only continuously-animated ambient layer. */}
+      <DesktopAmbientBackground tint="blue" secondary="purple" showScan />
       
       <div className="max-w-[1200px] mx-auto px-6 lg:px-12 relative z-10 flex flex-col items-start w-full">
         
