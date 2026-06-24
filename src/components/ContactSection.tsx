@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { MobileAmbientBackground } from "./MobileAmbientBackground";
 import { useContent } from "../context/ContentContext";
+import { apiUrl } from "../lib/apiBase";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -126,7 +127,7 @@ export const ContactSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/messages", {
+      const res = await fetch(apiUrl("/messages"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formState),

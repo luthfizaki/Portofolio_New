@@ -5,6 +5,9 @@ import {
   Briefcase, BookOpen, MessageSquare, PenTool, Search, Star, type LucideIcon,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { apiUrl } from "../lib/apiBase";
+import { requestJson } from "../lib/requestJson";
+import { getFallbackProjects } from "../lib/portfolioProjects";
 
 const iconMap: Record<string, LucideIcon> = {
   HeartPulse, ShieldCheck, Sparkles, Briefcase, BookOpen, MessageSquare, PenTool, Search, FolderOpen, Star,
@@ -18,11 +21,18 @@ export function ProjectsIndexPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "All Projects — Luthfi Arzaki";
-    fetch("/api/projects")
-      .then(r => (r.ok ? r.json() : []))
-      .then(setProjects)
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    const loadProjects = async () => {
+      try {
+        const { data } = await requestJson<any[]>(apiUrl("/projects"));
+        setProjects(Array.isArray(data) ? data : getFallbackProjects());
+      } catch {
+        setProjects(getFallbackProjects());
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
   }, []);
 
   return (

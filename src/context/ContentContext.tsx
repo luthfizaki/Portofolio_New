@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { apiUrl } from "../lib/apiBase";
 
 // ─── Types ───────────────────────────────────────────────────────────────────────
 
@@ -207,7 +208,7 @@ export const ContentProvider = ({ children }: { children: React.ReactNode }) => 
       const results = await Promise.all(
         sections.map(async (s) => {
           try {
-            const res = await fetch(`/api/content/${s}`);
+            const res = await fetch(apiUrl(`/content/${s}`));
             if (res.ok) return { section: s, data: await res.json() };
             return { section: s, data: null };
           } catch {

@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Users, Clock, Monitor, CheckCircle, X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { apiUrl } from "../lib/apiBase";
+import { requestJson } from "../lib/requestJson";
+import { getFallbackProject, getFallbackProjects } from "../lib/portfolioProjects";
 
 export function ProjectDetailPage() {
   const { id } = useParams();
@@ -12,17 +15,35 @@ export function ProjectDetailPage() {
   const [lightbox, setLightbox] = useState<number | null>(null);
 
   useEffect(() => {
-    setLoading(true);
     window.scrollTo(0, 0);
-    fetch(`/api/projects/${id}`)
-      .then(res => res.ok ? res.json() : null)
-      .then(data => { setProject(data); setLoading(false); })
-      .catch(() => setLoading(false));
+    const loadProject = async () => {
+      setLoading(true);
+      try {
+        const { res, data } = await requestJson<any>(apiUrl(`/projects/${id}`));
+        if (!res.ok) throw new Error("Project not found");
+        setProject(data);
+      } catch {
+        setProject(getFallbackProject(id));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProject();
   }, [id]);
 
   // Sibling projects for prev/next navigation.
   useEffect(() => {
-    fetch(`/api/projects`).then(res => (res.ok ? res.json() : [])).then(setAllProjects).catch(() => {});
+    const loadProjects = async () => {
+      try {
+        const { data } = await requestJson<any[]>(apiUrl("/projects"));
+        setAllProjects(Array.isArray(data) ? data : getFallbackProjects());
+      } catch {
+        setAllProjects(getFallbackProjects());
+      }
+    };
+
+    loadProjects();
   }, []);
 
   // SEO: reflect the open project in the tab title + social meta tags.

@@ -1,5 +1,5 @@
-// Reusable API helper for CMS components
-const API_BASE = "/api";
+import { apiUrl } from "../../src/lib/apiBase";
+import { requestJson } from "../../src/lib/requestJson";
 
 export function getToken(): string | null {
   return localStorage.getItem("cms_token");
@@ -14,7 +14,7 @@ export function authHeaders(): Record<string, string> {
 }
 
 export async function apiFetch(path: string, options?: RequestInit) {
-  const res = await fetch(`${API_BASE}${path}`, {
+  const { res, data } = await requestJson<any>(apiUrl(path), {
     ...options,
     headers: { ...authHeaders(), ...options?.headers },
   });
@@ -24,7 +24,6 @@ export async function apiFetch(path: string, options?: RequestInit) {
     window.location.href = "/cms/login";
     throw new Error("Unauthorized");
   }
-  const data = await res.json();
   if (!res.ok) throw new Error(data.error || "API error");
   return data;
 }
@@ -113,12 +112,14 @@ export async function uploadFile(file: File): Promise<{ url: string; filename: s
   const formData = new FormData();
   formData.append("file", processed);
   const token = getToken();
-  const res = await fetch(`${API_BASE}/upload`, {
+  const res = await fetch(apiUrl("/upload"), {
     method: "POST",
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     body: formData,
   });
-  const data = await res.json();
+  const data = await res.json().catch(() => {
+    throw new Error("API returned non-JSON response");
+  });
   if (!res.ok) throw new Error(data.error || "Upload failed");
   return data;
 }

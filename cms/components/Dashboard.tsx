@@ -101,7 +101,7 @@ export function Dashboard() {
         <h3 className="text-sm font-medium text-white mb-2">Getting Started</h3>
         <p className="text-[#8B9DBB] text-sm font-light leading-relaxed">
           Use the sidebar to navigate between sections. Each section can be edited independently.
-          Changes are saved to JSON files and will be reflected on your live portfolio immediately.
+          Changes are saved to the PostgreSQL-backed Node.js API and will be reflected on your live portfolio immediately.
           Projects have the most detail — you can add case studies with process steps for each project.
         </p>
       </div>
